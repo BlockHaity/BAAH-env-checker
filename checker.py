@@ -196,7 +196,48 @@ if __name__ == "__main__":
                         print("python版本支持完美，无需修复。")
                     elif sys.version_info <= (3, 10, 0):
                         print("python版本过低，无法修复。")
-                                        
+                        exit(1)
+                if sys.argv[2] == 'all':
+                    if sys.version_info >= (3, 10, 0):
+                        print("正在检查venv")
+                        if '.venv' in os.listdir():
+                            print("venv已存在")
+                            if sys.platform == 'win32':
+                                subprocess.run(['.venv\\scripts\\activate.bat'])
+                            elif sys.platform == 'linux':
+                                subprocess.run(['./.venv/bin/activate'])
+                            elif sys.platform == 'darwin':
+                                subprocess.run(['.venv/bin/activate'])
+                        else:
+                            print("正在创建venv")
+                            if sys.platform == 'win32':
+                                subprocess.run(['python', '-m', 'venv', '.venv'])
+                                subprocess.run(['.venv\\scripts\\activate.bat'])
+                            elif sys.platform == 'linux':
+                                subprocess.run(['python3', '-m', 'venv', '.venv'])
+                                subprocess.run(['./.venv/bin/activate'])
+                            elif sys.platform == 'darwin':
+                                subprocess.run(['python3', '-m', 'venv', '.venv'])
+                                subprocess.run(['./.venv/bin/activate'])
+                        print("正在安装requirements")
+                        if sys.version_info >= (3, 12, 0) and sys.version_info < (3, 13, 0):
+                            print("正在修复requirements...")
+                            os.rename("requirements.txt", "requirements.txt.backup")
+                            urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/requirements/python312.txt", "requirements.txt")
+                            print("修复完成！")
+                            print("文件变动：requirements.txt  onnxruntime==1.16.9 --> onnxruntime==1.17.0")
+                        elif sys.version_info >= (3, 10, 0) and sys.version_info < (3, 11, 0):
+                            print("python版本支持完美，无需修复。")
+                        elif sys.version_info <= (3, 10, 0):
+                            print("python版本过低，无法修复。")
+                            exit(1)
+                        subprocess.run(['pip', 'install', '-r', 'requirements.txt'])
+                        print("修复完成！")
+                    else:
+                        print("python版本过低，无法修复。")
+                        exit(1)
+                        
+                        
     else:
         # 如果命令行参数为空，则调用help()函数
         help()
