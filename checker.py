@@ -1,7 +1,7 @@
 import json
 import subprocess
 import sys
-import os
+import platform
 import urllib.request
 
 
@@ -46,10 +46,23 @@ if __name__ == "__main__":
                 # 如果命令行参数为system，则调用version()函数
                 if sys.argv[2] == "system":
                     version()
+                    report = {}
+                    report["error"] = []
+                    arch_data = json.loads(urllib.request.urlopen(f"https://gh-proxy.com/github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/arch.json").read().decode("utf-8"))
+                    try:
+                        if arch_data[platform.machine()] == "support":
+                            print(f"架构: {platform.machine()}")
+                            report["arch"] = platform.machine()
+                        elif arch_data[platform.machine()] == "experimental-support":
+                            print(f"架构: {platform.machine()} (实验性支持)")
+                            report["arch"] = platform.machine()
+                            report["error"].append("arch-experimental-support")
+                    except KeyError:
+                        print(f"架构: {platform.machine()} (不支持)")
+                        report["arch"] = platform.machine()
+                        report["error"].append("arch-not-support")
                     # 检查系统环境
                     if sys.platform == "win32":
-                        report = {}
-                        report['error'] = []
                         report["system"] = "Windows"
                         print("系统: Windows")
                         # 检查Windows版本
@@ -80,8 +93,6 @@ if __name__ == "__main__":
                             print("报告已生成: report-system.json")
                     elif sys.platform == "linux":
                         print("系统: Linux")
-                        report = {}
-                        report["error"] = []
                         report["platform"] = "Linux"
                         # 检查Linux发行版
                         if (
@@ -131,7 +142,8 @@ if __name__ == "__main__":
                     with open("report-system.json", "w", encoding="utf-8") as f:
                         json.dump(report, f)
                     print("报告已生成: report-system.json")
-                    exit(0)
+
+                exit(0)
 
     else:
         # 如果命令行参数为空，则调用help()函数
