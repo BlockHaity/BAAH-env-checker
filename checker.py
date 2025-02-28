@@ -28,7 +28,7 @@ def version():
     print('BAAH环境检查器 1.0.0')
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 1:
+    if len(sys.argv) >= 2:
         if sys.argv[1] == 'version':
             version()
         elif sys.argv[1] == 'help':
@@ -77,34 +77,34 @@ if __name__ == '__main__':
                             print('报告已生成: report-system.json')
                         else:
                             linux_id = subprocess.run(['lsb_release', '-is'], capture_output=True, text=True).stdout.strip()
-                            linux_id_data = urllib.request.urlopen(f'https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json').read().decode('utf-8').json()
+                            linux_id_data = json.loads(urllib.request.urlopen(f'https://gh-proxy.com/github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json').read().decode('utf-8'))
                             print(f'Linux发行版: {linux_id}')
                             if linux_id in linux_id_data:
                                 if linux_id_data[linux_id] == 'support':
-                                    print('[info]您的Linux发行版为支持版本，可以继续使用。')
+                                    print('您的Linux发行版为支持版本，可以继续使用。')
                                     report['linux_id'] = linux_id
                                     report['error'] = 'none'
                                 elif linux_id_data[linux_id] == 'not-support':
-                                    print('[error][system-not-support]您的Linux发行版为不支持版本，请更换为支持版本。')
+                                    print('您的Linux发行版为不支持版本，请更换为支持版本。')
                                     report['linux_id'] = linux_id
                                     report['error'] = 'system-not-support'
                                 elif linux_id_data[linux_id] == 'experimental-support':
-                                    print('[info]您的Linux发行版为实验性支持版本，可以继续使用。')
+                                    print('您的Linux发行版为实验性支持版本，可以继续使用。')
                                     report['linux_id'] = linux_id
                                     report['error'] = 'experimental-support'
                             else:
-                                print('[error][system-not-support]您的Linux发行版支持情况未知。')
+                                print('您的Linux发行版支持情况未知。')
                                 report['linux_id'] = linux_id
                                 report['error'] = 'system-unknown'
                             with open('report-system.json', 'w', encoding='utf-8') as f:
                                 json.dump(report, f)
                             print('报告已生成: report-system.json')
-                        elif sys.platform == 'darwin':
+                        #elif sys.platform == 'darwin':
                             
                             
                             
-                elif sys.argv[2] == 'python':
+                #elif sys.argv[2] == 'python':
 
-                elif sys.argv[2] == 'docker':
+                #elif sys.argv[2] == 'docker':
     else:
         help()
