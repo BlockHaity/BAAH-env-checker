@@ -48,16 +48,15 @@ if __name__ == "__main__":
                     version()
                     report = {}
                     report["error"] = []
-                    arch_data = json.loads(urllib.request.urlopen(f"https://gh-proxy.com/github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/arch.json").read().decode("utf-8"))
-                    try:
-                        if arch_data[platform.machine()] == "support":
-                            print(f"架构: {platform.machine()}")
-                            report["arch"] = platform.machine()
-                        elif arch_data[platform.machine()] == "experimental-support":
-                            print(f"架构: {platform.machine()} (实验性支持)")
-                            report["arch"] = platform.machine()
-                            report["error"].append("arch-experimental-support")
-                    except KeyError:
+                    arch_data = json.loads(urllib.request.urlopen(f"https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/arch.json").read().decode("utf-8"))
+                    if arch_data.get(platform.machine()) == "support":
+                        print(f"架构: {platform.machine()}")
+                        report["arch"] = platform.machine()
+                    elif arch_data.get(platform.machine()) == "experimental-support":
+                        print(f"架构: {platform.machine()} (实验性支持)")
+                        report["arch"] = platform.machine()
+                        report["error"].append("arch-experimental-support")
+                    else:
                         print(f"架构: {platform.machine()} (不支持)")
                         report["arch"] = platform.machine()
                         report["error"].append("arch-not-support")
@@ -110,7 +109,7 @@ if __name__ == "__main__":
                             ).stdout.strip()
                             linux_id_data = json.loads(
                                 urllib.request.urlopen(
-                                    f"https://gh-proxy.com/github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json"
+                                    f"https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json"
                                 )
                                 .read()
                                 .decode("utf-8")
