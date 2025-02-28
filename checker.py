@@ -4,107 +4,137 @@ import sys
 import os
 import urllib.request
 
+
 def help():
-        print('BAAH env checker')
-        print('BAAH环境检查器')
-        print('')
-        print('用法: python3 checker.py <功能> <选项>')
-        print('功能:')
-        print('  fix - 尝试修复环境')
-        print('  check - 检查环境并生成报告')
-        print('  help - 显示帮助信息')
-        print('  version - 显示版本信息')
-        print('选项:')
-        print('  当使用 check 功能时:')
-        print('    system - 检查系统环境')
-        print('    python - 检查Python环境')
-        print('    docker - 检查docker环境')
-        print('  当使用 fix 功能时:')
-        print('    env - 修复python venv环境')
-        print('    requirements - 修复requirements.txt')
+    print("BAAH env checker")
+    print("BAAH环境检查器")
+    print("")
+    print("用法: python3 checker.py <功能> <选项>")
+    print("功能:")
+    print("  fix - 尝试修复环境")
+    print("  check - 检查环境并生成报告")
+    print("  help - 显示帮助信息")
+    print("  version - 显示版本信息")
+    print("选项:")
+    print("  当使用 check 功能时:")
+    print("    system - 检查系统环境")
+    print("    python - 检查Python环境")
+    print("    docker - 检查docker环境")
+    print("  当使用 fix 功能时:")
+    print("    env - 修复python venv环境")
+    print("    requirements - 修复requirements.txt")
+
+
 
 def version():
-    print('BAAH env checker 1.0.0')
-    print('BAAH环境检查器 1.0.0')
+    print("BAAH env checker 1.0.0")
+    print("BAAH环境检查器 1.0.0")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+    # 检查命令行参数长度
     if len(sys.argv) >= 2:
-        if sys.argv[1] == 'version':
+        # 如果命令行参数为version，则调用version()函数
+        if sys.argv[1] == "version":
             version()
-        elif sys.argv[1] == 'help':
+        # 如果命令行参数为help，则调用help()函数
+        elif sys.argv[1] == "help":
             help()
-        elif sys.argv[1] == 'check':
+        # 如果命令行参数为check，则检查系统环境
+        elif sys.argv[1] == "check":
+            # 检查命令行参数长度
             if len(sys.argv) >= 3:
-                if sys.argv[2] == 'system':
+                # 如果命令行参数为system，则调用version()函数
+                if sys.argv[2] == "system":
                     version()
                     # 检查系统环境
-                    if sys.platform == 'win32':
-                        print('系统: Windows')
+                    if sys.platform == "win32":
+                        print("系统: Windows")
+                        # 检查Windows版本
                         if sys.getwindowsversion().major < 10:
-                            print(f'Windows版本: {sys.getwindowsversion().major}')
-                            report = {'platform': 'Windows'}
-                            report['version'] = sys.getwindowsversion().major
-                            report['error'] = 'system-not-support'
-                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                            print(f"Windows版本: {sys.getwindowsversion().major}")
+                            report = {"platform": "Windows"}
+                            report["version"] = sys.getwindowsversion().major
+                            report["error"] = "system-not-support"
+                            # 生成报告
+                            with open("report-system.json", "w", encoding="utf-8") as f:
                                 json.dump(report, f)
-                            print('报告已生成: report-system.json')
-                            print('请升级您的Windows版本到10或更高版本。')
+                            print("报告已生成: report-system.json")
+                            print("请升级您的Windows版本到10或更高版本。")
                         elif sys.getwindowsversion().major == 10:
-                            print(f'Windows版本: {sys.getwindowsversion().major}')
-                            report = {'platform': 'Windows'}
-                            report['version'] = sys.getwindowsversion().major
-                            print('您的Windows版本为10，可以继续使用。')
-                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                            print(f"Windows版本: {sys.getwindowsversion().major}")
+                            report = {"platform": "Windows"}
+                            report["version"] = sys.getwindowsversion().major
+                            print("您的Windows版本为10，可以继续使用。")
+                            # 生成报告
+                            with open("report-system.json", "w", encoding="utf-8") as f:
                                 json.dump(report, f)
-                            print('报告已生成: report-system.json')
+                            print("报告已生成: report-system.json")
                         if sys.getwindowsversion().major == 11:
-                            print(f'Windows版本: {sys.getwindowsversion().major}')
-                            report = {'platform': 'Windows'}
-                            report['version'] = sys.getwindowsversion().major
-                            print('您的Windows版本为11，可以继续使用。')
-                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                            print(f"Windows版本: {sys.getwindowsversion().major}")
+                            report = {"platform": "Windows"}
+                            report["version"] = sys.getwindowsversion().major
+                            print("您的Windows版本为11，可以继续使用。")
+                            # 生成报告
+                            with open("report-system.json", "w", encoding="utf-8") as f:
                                 json.dump(report, f)
-                            print('报告已生成: report-system.json')
-                    elif sys.platform == 'linux':
-                        print('系统: Linux')
-                        report = {'platform': 'Linux'}
-                        if subprocess.run(['uname', '-o'], capture_output=True, text=True).stdout.strip() == 'Android':
-                            print('你的环境为Termux，请参考文档中的博客链接部署。')
-                            report['linux_id'] = 'Termux'
-                            report['error'] = 'experimental-support'
-                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                            print("报告已生成: report-system.json")
+                    elif sys.platform == "linux":
+                        print("系统: Linux")
+                        report = {"platform": "Linux"}
+                        # 检查Linux发行版
+                        if (
+                            subprocess.run(
+                                ["uname", "-o"], capture_output=True, text=True
+                            ).stdout.strip()
+                            == "Android"
+                        ):
+                            print("你的环境为Termux，请参考文档中的博客链接部署。")
+                            report["linux_id"] = "Termux"
+                            report["error"] = "experimental-support"
+                            # 生成报告
+                            with open("report-system.json", "w", encoding="utf-8") as f:
                                 json.dump(report, f)
-                            print('报告已生成: report-system.json')
+                            print("报告已生成: report-system.json")
                         else:
-                            linux_id = subprocess.run(['lsb_release', '-is'], capture_output=True, text=True).stdout.strip()
-                            linux_id_data = json.loads(urllib.request.urlopen(f'https://gh-proxy.com/github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json').read().decode('utf-8'))
-                            print(f'Linux发行版: {linux_id}')
+                            linux_id = subprocess.run(
+                                ["lsb_release", "-is"], capture_output=True, text=True
+                            ).stdout.strip()
+                            linux_id_data = json.loads(
+                                urllib.request.urlopen(
+                                    f"https://gh-proxy.com/github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json"
+                                )
+                                .read()
+                                .decode("utf-8")
+                            )
+                            print(f"Linux发行版: {linux_id}")
+                            # 检查Linux发行版支持情况
                             if linux_id in linux_id_data:
-                                if linux_id_data[linux_id] == 'support':
-                                    print('您的Linux发行版为支持版本，可以继续使用。')
-                                    report['linux_id'] = linux_id
-                                    report['error'] = 'none'
-                                elif linux_id_data[linux_id] == 'not-support':
-                                    print('您的Linux发行版为不支持版本，请更换为支持版本。')
-                                    report['linux_id'] = linux_id
-                                    report['error'] = 'system-not-support'
-                                elif linux_id_data[linux_id] == 'experimental-support':
-                                    print('您的Linux发行版为实验性支持版本，可以继续使用。')
-                                    report['linux_id'] = linux_id
-                                    report['error'] = 'experimental-support'
+                                if linux_id_data[linux_id] == "support":
+                                    print("您的Linux发行版为支持版本，可以继续使用。")
+                                    report["linux_id"] = linux_id
+                                    report["error"] = "none"
+                                elif linux_id_data[linux_id] == "not-support":
+                                    print(
+                                        "您的Linux发行版为不支持版本，请更换为支持版本。"
+                                    )
+                                    report["linux_id"] = linux_id
+                                    report["error"] = "system-not-support"
+                                elif linux_id_data[linux_id] == "experimental-support":
+                                    print(
+                                        "您的Linux发行版为实验性支持版本，可以继续使用。"
+                                    )
+                                    report["linux_id"] = linux_id
+                                    report["error"] = "experimental-support"
                             else:
-                                print('您的Linux发行版支持情况未知。')
-                                report['linux_id'] = linux_id
-                                report['error'] = 'system-unknown'
-                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                                print("您的Linux发行版支持情况未知。")
+                                report["linux_id"] = linux_id
+                                report["error"] = "system-unknown"
+                            # 生成报告
+                            with open("report-system.json", "w", encoding="utf-8") as f:
                                 json.dump(report, f)
-                            print('报告已生成: report-system.json')
-                        #elif sys.platform == 'darwin':
-                            
-                            
-                            
-                #elif sys.argv[2] == 'python':
+                            print("报告已生成: report-system.json")
 
-                #elif sys.argv[2] == 'docker':
     else:
+        # 如果命令行参数为空，则调用help()函数
         help()
