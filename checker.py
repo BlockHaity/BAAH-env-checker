@@ -3,6 +3,7 @@ import subprocess
 import sys
 import platform
 import urllib.request
+import os
 
 
 def help():
@@ -19,12 +20,12 @@ def help():
     print("  当使用 check 功能时:")
     print("    system - 检查系统环境")
     print("    python - 检查Python环境")
-    print("    docker - 检查docker环境")
     print("  当使用 fix 功能时:")
-    print("    env - 修复python venv环境")
+    print("    all - 修复所有")
     print("    requirements - 修复requirements.txt")
 
 
+# 定义一个名为version的函数
 def version():
     print("BAAH env checker 1.0.0")
     print("BAAH环境检查器 1.0.0")
@@ -48,6 +49,7 @@ if __name__ == "__main__":
                     version()
                     report = {}
                     report["error"] = []
+                    # 检查架构
                     arch_data = json.loads(urllib.request.urlopen(f"https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/arch.json").read().decode("utf-8"))
                     if arch_data.get(platform.machine()) == "support":
                         print(f"架构: {platform.machine()}")
@@ -141,9 +143,60 @@ if __name__ == "__main__":
                     with open("report-system.json", "w", encoding="utf-8") as f:
                         json.dump(report, f)
                     print("报告已生成: report-system.json")
-
-                exit(0)
-
+                elif sys.argv[2] == "python":
+                    report = {}
+                    report["error"] = []
+                    # 检查Python版本
+                    if sys.version_info == (3, 10):
+                        print("Python版本: 完全支持")
+                        report["python"] = sys.version
+                        report["error"] = "none"
+                    elif sys.version_info > (3, 10):
+                        print("Python版本: 部分支持，需要修复requeirements")
+                        report["python"] = sys.version
+                        report["error"].append("python-need-fix")
+                    else:
+                        print("Python版本: 不支持")
+                        report["python"] = sys.version
+                        report["error"].append("python-not-support")
+                    # 检查venv模块
+                    try:
+                        import venv
+                        print("venv模块: 支持")
+                        report["venv"] = "have"
+                    except ImportError:
+                        print("venv模块: 不支持")
+                        report["venv"] = "not-have"
+                        report["error"].append("venv-not-have")
+                    report["package"] = []
+                    for package in subprocess.run(['pip', 'freeze'], capture_output=True, text=True).stdout.split('\n'):
+                        report["package"].append(package)
+                    with open("report-python.json", "w", encoding="utf-8") as f:
+                        json.dump(report, f)
+                    print("报告已生成: report-python.json")
+            else:
+                help()
+            exit(0)
+        elif sys.argv[1] == 'fix':
+            if len(sys.argv) == 3:
+                if sys.argv[2] == 'requeirements':
+                    if '--force' in sys.argv:
+                        print("正在修复requirements...")
+                        os.rename("requirements.txt", "requirements.txt.backup")
+                        print("指定--force，强制使用最新版本")
+                        urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/requirements/force.txt", "requirements.txt")
+                        print("修复完成！")
+                    elif sys.version_info >= (3, 12, 0) and sys.version_info < (3, 13, 0):
+                        print("正在修复requirements...")
+                        os.rename("requirements.txt", "requirements.txt.backup")
+                        urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/requirements/python312.txt", "requirements.txt")
+                        print("修复完成！")
+                        print("文件变动：requirements.txt  onnxruntime==1.16.9 --> onnxruntime==1.17.0")
+                    elif sys.version_info >= (3, 10, 0) and sys.version_info < (3, 11, 0):
+                        print("python版本支持完美，无需修复。")
+                    elif sys.version_info <= (3, 10, 0):
+                        print("python版本过低，无法修复。")
+                                        
     else:
         # 如果命令行参数为空，则调用help()函数
         help()
