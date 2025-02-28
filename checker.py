@@ -48,28 +48,60 @@ if __name__ == '__main__':
                             with open('report-system.json', 'w', encoding='utf-8') as f:
                                 json.dump(report, f)
                             print('报告已生成: report-system.json')
-                            print('[error][system-not-support]请升级您的Windows版本到10或更高版本。')
+                            print('请升级您的Windows版本到10或更高版本。')
                         elif sys.getwindowsversion().major == 10:
                             print(f'Windows版本: {sys.getwindowsversion().major}')
                             report = {'platform': 'Windows'}
                             report['version'] = sys.getwindowsversion().major
+                            print('您的Windows版本为10，可以继续使用。')
                             with open('report-system.json', 'w', encoding='utf-8') as f:
                                 json.dump(report, f)
                             print('报告已生成: report-system.json')
-                            print('[info]您的Windows版本为10，可以继续使用。')
                         if sys.getwindowsversion().major == 11:
                             print(f'Windows版本: {sys.getwindowsversion().major}')
                             report = {'platform': 'Windows'}
                             report['version'] = sys.getwindowsversion().major
+                            print('您的Windows版本为11，可以继续使用。')
                             with open('report-system.json', 'w', encoding='utf-8') as f:
                                 json.dump(report, f)
                             print('报告已生成: report-system.json')
-                            print('[info]您的Windows版本为11，可以继续使用。')
                     elif sys.platform == 'linux':
                         print('系统: Linux')
                         report = {'platform': 'Linux'}
-                        linux_id = subprocess.run(['lsb_release', '-is'], capture_output=True, text=True).stdout.strip()
-                        linux_id_data = requests.get(f'https:/').text
+                        if subprocess.run(['uname', '-o'], capture_output=True, text=True).stdout.strip() == 'Android':
+                            print('你的环境为Termux，请参考文档中的博客链接部署。')
+                            report['linux_id'] = 'Termux'
+                            report['error'] = 'experimental-support'
+                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                                json.dump(report, f)
+                            print('报告已生成: report-system.json')
+                        else:
+                            linux_id = subprocess.run(['lsb_release', '-is'], capture_output=True, text=True).stdout.strip()
+                            linux_id_data = urllib.request.urlopen(f'https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/linux/linux_id_data.json').read().decode('utf-8').json()
+                            print(f'Linux发行版: {linux_id}')
+                            if linux_id in linux_id_data:
+                                if linux_id_data[linux_id] == 'support':
+                                    print('[info]您的Linux发行版为支持版本，可以继续使用。')
+                                    report['linux_id'] = linux_id
+                                    report['error'] = 'none'
+                                elif linux_id_data[linux_id] == 'not-support':
+                                    print('[error][system-not-support]您的Linux发行版为不支持版本，请更换为支持版本。')
+                                    report['linux_id'] = linux_id
+                                    report['error'] = 'system-not-support'
+                                elif linux_id_data[linux_id] == 'experimental-support':
+                                    print('[info]您的Linux发行版为实验性支持版本，可以继续使用。')
+                                    report['linux_id'] = linux_id
+                                    report['error'] = 'experimental-support'
+                            else:
+                                print('[error][system-not-support]您的Linux发行版支持情况未知。')
+                                report['linux_id'] = linux_id
+                                report['error'] = 'system-unknown'
+                            with open('report-system.json', 'w', encoding='utf-8') as f:
+                                json.dump(report, f)
+                            print('报告已生成: report-system.json')
+                        elif sys.platform == 'darwin':
+                            
+                            
                             
                 elif sys.argv[2] == 'python':
 

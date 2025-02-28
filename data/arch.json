@@ -1,0 +1,4 @@
+{
+    "'x86_64": "support",
+    "aarch64": "experimental-support"
+}
