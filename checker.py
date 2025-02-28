@@ -184,12 +184,12 @@ if __name__ == "__main__":
                         print("正在修复requirements...")
                         os.rename("requirements.txt", "requirements.txt.backup")
                         print("指定--force，强制使用最新版本")
-                        urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/requirements/force.txt", "requirements.txt")
+                        urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/requirements/force.txt", "requirements.txt")
                         print("修复完成！")
                     elif sys.version_info >= (3, 12, 0) and sys.version_info < (3, 13, 0):
                         print("正在修复requirements...")
                         os.rename("requirements.txt", "requirements.txt.backup")
-                        urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/requirements/python312.txt", "requirements.txt")
+                        urllib.request.urlretrieve("https://github.com/BlockHaity/BAAH-env-checker/raw/refs/heads/main/data/requirements/python312.txt", "requirements.txt")
                         print("修复完成！")
                         print("文件变动：requirements.txt  onnxruntime==1.16.9 --> onnxruntime==1.17.0")
                     elif sys.version_info >= (3, 10, 0) and sys.version_info < (3, 11, 0):
