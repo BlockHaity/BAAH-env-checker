@@ -230,7 +230,7 @@ if __name__ == "__main__":
                             if sys.platform == "win32":
                                 subprocess.run([".venv\\scripts\\activate.bat"])
                             elif sys.platform == "linux":
-                                subprocess.run(["./.venv/bin/activate"])
+                                subprocess.run(["source", "./.venv/bin/activate"])
                             elif sys.platform == "darwin":
                                 subprocess.run([".venv/bin/activate"])
                         else:
