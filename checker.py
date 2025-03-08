@@ -12,7 +12,6 @@ def help():
     print("")
     print("用法: python3 checker.py <功能> <选项>")
     print("功能:")
-    print("  fix - 尝试修复环境")
     print("  check - 检查环境并生成报告")
     print("  help - 显示帮助信息")
     print("  version - 显示版本信息")
@@ -20,10 +19,6 @@ def help():
     print("  当使用 check 功能时:")
     print("    system - 检查系统环境")
     print("    python - 检查Python环境")
-    print("  当使用 fix 功能时:")
-    print("    all - 修复所有")
-    print("    requirements - 修复requirements.txt")
-
 
 # 定义一个名为version的函数
 def version():

@@ -8,8 +8,6 @@
 
  - 检查系统环境
  - 检查python环境
- - 针对python版本修复requeirements
- - 一行命令配置BAAH源码需要运行的环境
 
 ---
 
